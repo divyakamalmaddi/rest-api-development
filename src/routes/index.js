@@ -34,4 +34,70 @@ router.get('/meta/members', (req, res) => {
   });
 });
 
+router.post('/users/register', (req, res) => {
+  const newUser = req.body;
+
+  // Create a new user
+  // If success
+  res.status(201).send({
+    status: true,
+  });
+
+  // If error
+  res.status(200).send({
+    status: false,
+    error: 'User already exists!',
+  });
+});
+
+router.post('/users/authenticate', (req, res) => {
+  const user = req.body;
+
+  // Check if user exists
+  // If success
+  res.status(200).send({
+    status: true,
+    token: 123, // uuidv4 string auth token
+  });
+
+  // If error
+  res.status(201).send({
+    status: false,
+  });
+});
+
+router.post('/users/expire', (req, res) => {
+  const userToken = req.body.token;
+
+  // Check if token exists and invalidate it
+  // If success
+  res.status(200).send({
+    status: true,
+  });
+
+  // If error
+  res.status(200).send({
+    status: false,
+  });
+});
+
+router.post('/users', (req, res) => {
+  const userToken = req.body.token;
+
+  // Retrieve user
+  // If success
+  res.status(200).send({
+    status: true,
+    username: 'user',
+    fullname: 'fullname',
+    age: 20,
+  });
+
+  // If error
+  res.status(200).send({
+    status: false,
+    error: 'Invalid authentication token',
+  });
+});
+
 module.exports = router;
