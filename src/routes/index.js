@@ -15,6 +15,7 @@ fs.readFile(pathToFile, 'utf8', (error, data) => {
 });
 
 router.get('/', (req, res) => {
+  // Return list of implemented endpoints
   res.status(200).send({
     status: true,
     result: endpointList,
@@ -91,6 +92,88 @@ router.post('/users', (req, res) => {
     username: 'user',
     fullname: 'fullname',
     age: 20,
+  });
+
+  // If error
+  res.status(200).send({
+    status: false,
+    error: 'Invalid authentication token',
+  });
+});
+
+router.get('/diary', (req, res) => {
+  // Get all public diaries
+  res.status(200).send({
+    status: true,
+    result: [],
+  });
+});
+
+router.post('/diary', (req, res) => {
+  const userToken = req.body.token;
+
+  // Get all diaries belonging to an authenticated user
+  // If success
+  res.status(200).send({
+    status: true,
+    result: [],
+  });
+
+  // If error
+  res.status(200).send({
+    status: false,
+    error: 'Invalid authentication token',
+  });
+});
+
+router.post('/diary/create', (req, res) => {
+  const userToken = req.body.token;
+  const newDiary = {
+    title: req.body.title,
+    public: req.body.public,
+    text: req.body.text,
+  };
+
+  // Create a new diary entry
+  // If success
+  res.status(201).send({
+    status: true,
+    result: 2, // id of newly created diary object
+  });
+
+  // If error
+  res.status(200).send({
+    status: false,
+    error: 'Invalid authentication token',
+  });
+});
+
+router.post('/diary/delete', (req, res) => {
+  const userToken = req.body.token;
+  const diaryId = req.body.id;
+
+  // Delete diary entry
+  // If success
+  res.status(200).send({
+    status: true,
+  });
+
+  // If error
+  res.status(200).send({
+    status: false,
+    error: 'Invalid authentication token',
+  });
+});
+
+router.post('/diary/permission', (req, res) => {
+  const userToken = req.body.token;
+  const diaryId = req.body.id;
+  const diaryPermission = req.body.public;
+
+  // Update diary permission
+  // If success
+  res.status(200).send({
+    status: true,
   });
 
   // If error
