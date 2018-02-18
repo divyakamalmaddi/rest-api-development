@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/CS5331-Web-Security-Group14/rest-api-development#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.16.2",
