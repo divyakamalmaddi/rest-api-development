@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const uuidv4 = require('uuid/v4');
 
 const Schema = { mongoose };
 
@@ -16,9 +17,13 @@ const UserSchema = new Schema({
     type: Number,
     required: true,
   },
+  token: {
+    type: String,
+  },
 });
 
-UserSchema.pre('save', (next) => {
+/* eslint func-names: ["error", "never"] */
+UserSchema.pre('save', function (next) {
   const user = this;
 
   if (user.isModified('password')) {
@@ -33,6 +38,32 @@ UserSchema.pre('save', (next) => {
     next();
   }
 });
+
+UserSchema.methods.generateAuthToken = function () {
+  const user = this;
+  const token = uuidv4();
+  user.token = token;
+
+  return user.save().then(() => token);
+};
+
+UserSchema.methods.removeAuthToken = function () {
+  const user = this;
+  const token = uuidv4();
+  user.token = token;
+
+  return user.update({
+    token: '',
+  });
+};
+
+UserSchema.statics.findByToken = function (token) {
+  const User = this;
+
+  return User.findOne({
+    token,
+  });
+};
 
 const User = mongoose.model('User', UserSchema);
 
