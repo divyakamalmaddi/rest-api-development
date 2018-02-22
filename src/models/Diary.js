@@ -3,7 +3,7 @@ const autoIncrement = require('mongoose-auto-increment');
 
 autoIncrement.initialize(mongoose.connection);
 
-const Schema = { mongoose };
+const Schema = mongoose.Schema;
 
 const DiarySchema = new Schema({
   id: {
@@ -19,7 +19,8 @@ const DiarySchema = new Schema({
     required: true,
   },
   publish_date: {
-    type: String,
+    type: Date, 
+    default: Date.now,
     required: true,
   },
   public: {
