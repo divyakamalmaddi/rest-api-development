@@ -7,6 +7,8 @@ const router = express.Router();
 const endpointList = ['/', '/meta/heartbeat', '/meta/members'];
 const pathToFile = path.join(__dirname, '..', 'team_members.txt');
 
+var user_controller = require('../controllers/users');
+var diary_controller = require('../controllers/diaries');
 let teamMembers = [];
 
 fs.readFile(pathToFile, 'utf8', (error, data) => {
@@ -35,152 +37,22 @@ router.get('/meta/members', (req, res) => {
   });
 });
 
-router.post('/users/register', (req, res) => {
-  const newUser = req.body;
+router.post('/users/register', user_controller.registerUser);
 
-  // Create a new user
-  // If success
-  res.status(201).send({
-    status: true,
-  });
+router.post('/users/authenticate', user_controller.authenticateUser);
 
-  // If error
-  res.status(200).send({
-    status: false,
-    error: 'User already exists!',
-  });
-});
+router.post('/users/expire', user_controller.expireUserToken);
 
-router.post('/users/authenticate', (req, res) => {
-  const user = req.body;
+router.post('/users', user_controller.getUserByToken);
 
-  // Check if user exists
-  // If success
-  res.status(200).send({
-    status: true,
-    token: 123, // uuidv4 string auth token
-  });
+router.get('/diary', diary_controller.getAllPublicDiaries);
 
-  // If error
-  res.status(201).send({
-    status: false,
-  });
-});
+router.post('/diary', diary_controller.getEntriesByUsername);
 
-router.post('/users/expire', (req, res) => {
-  const userToken = req.body.token;
+router.post('/diary/create', diary_controller.createDiaryEntry);
 
-  // Check if token exists and invalidate it
-  // If success
-  res.status(200).send({
-    status: true,
-  });
+router.post('/diary/delete', diary_controller.deleteEntry);
 
-  // If error
-  res.status(200).send({
-    status: false,
-  });
-});
-
-router.post('/users', (req, res) => {
-  const userToken = req.body.token;
-
-  // Retrieve user
-  // If success
-  res.status(200).send({
-    status: true,
-    username: 'user',
-    fullname: 'fullname',
-    age: 20,
-  });
-
-  // If error
-  res.status(200).send({
-    status: false,
-    error: 'Invalid authentication token',
-  });
-});
-
-router.get('/diary', (req, res) => {
-  // Get all public diaries
-  res.status(200).send({
-    status: true,
-    result: [],
-  });
-});
-
-router.post('/diary', (req, res) => {
-  const userToken = req.body.token;
-
-  // Get all diaries belonging to an authenticated user
-  // If success
-  res.status(200).send({
-    status: true,
-    result: [],
-  });
-
-  // If error
-  res.status(200).send({
-    status: false,
-    error: 'Invalid authentication token',
-  });
-});
-
-router.post('/diary/create', (req, res) => {
-  const userToken = req.body.token;
-  const newDiary = {
-    title: req.body.title,
-    public: req.body.public,
-    text: req.body.text,
-  };
-
-  // Create a new diary entry
-  // If success
-  res.status(201).send({
-    status: true,
-    result: 2, // id of newly created diary object
-  });
-
-  // If error
-  res.status(200).send({
-    status: false,
-    error: 'Invalid authentication token',
-  });
-});
-
-router.post('/diary/delete', (req, res) => {
-  const userToken = req.body.token;
-  const diaryId = req.body.id;
-
-  // Delete diary entry
-  // If success
-  res.status(200).send({
-    status: true,
-  });
-
-  // If error
-  res.status(200).send({
-    status: false,
-    error: 'Invalid authentication token',
-  });
-});
-
-router.post('/diary/permission', (req, res) => {
-  const userToken = req.body.token;
-  const diaryId = req.body.id;
-  const diaryPermission = req.body.public;
-
-  // Update diary permission
-  // If success
-  res.status(200).send({
-    status: true,
-  });
-
-  // If error
-  res.status(200).send({
-    status: false,
-    error: 'Invalid authentication token',
-  });
-});
+router.post('/diary/permission', diary_controller.editPermission);
 
 module.exports = router;
