@@ -3,7 +3,7 @@ const autoIncrement = require('mongoose-auto-increment');
 
 autoIncrement.initialize(mongoose.connection);
 
-const Schema = { mongoose };
+const Schema = mongoose.Schema;
 
 const DiarySchema = new Schema({
   id: {
@@ -19,7 +19,8 @@ const DiarySchema = new Schema({
     required: true,
   },
   publish_date: {
-    type: String,
+    type: Date,
+    default: Date.now,
     required: true,
   },
   public: {
@@ -33,6 +34,27 @@ const DiarySchema = new Schema({
 });
 
 DiarySchema.plugin(autoIncrement.plugin, { model: 'Diary', field: 'id', startAt: 1 });
+
+DiarySchema.statics.getAllPublicDiaries = function (callback) {
+  Diary.find({ public: true }).exec(function (err, entries) {
+    if (err) {
+      return callback(err);
+    } else {
+      return callback(err, entries);
+    }
+
+  })
+}
+DiarySchema.statics.getAllEntriesByAuthor = function (username, callback) {
+  Diary.find({ author: username }).exec(function (err, entries) {
+    if (err) {
+      return callback(err);
+    } else {
+      return callback(err, entries);
+    }
+
+  })
+}
 
 const Diary = mongoose.model('Diary', DiarySchema);
 
