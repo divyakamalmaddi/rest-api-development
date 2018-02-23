@@ -3,9 +3,7 @@ const autoIncrement = require('mongoose-auto-increment');
 
 autoIncrement.initialize(mongoose.connection);
 
-const Schema = mongoose.Schema;
-
-const DiarySchema = new Schema({
+const DiarySchema = new mongoose.Schema({
   id: {
     type: Number,
     unique: true,
@@ -35,26 +33,26 @@ const DiarySchema = new Schema({
 
 DiarySchema.plugin(autoIncrement.plugin, { model: 'Diary', field: 'id', startAt: 1 });
 
+/* eslint func-names: ["error", "never"] */
 DiarySchema.statics.getAllPublicDiaries = function (callback) {
-  Diary.find({ public: true }).exec(function (err, entries) {
-    if (err) {
-      return callback(err);
-    } else {
-      return callback(err, entries);
-    }
+  const Diary = this;
 
-  })
-}
+  Diary.find({ public: true }).exec((err, entries) => {
+    if (err) return callback(err);
+
+    return callback(err, entries);
+  });
+};
+
 DiarySchema.statics.getAllEntriesByAuthor = function (username, callback) {
-  Diary.find({ author: username }).exec(function (err, entries) {
-    if (err) {
-      return callback(err);
-    } else {
-      return callback(err, entries);
-    }
+  const Diary = this;
 
-  })
-}
+  Diary.find({ author: username }).exec((err, entries) => {
+    if (err) return callback(err);
+
+    return callback(err, entries);
+  });
+};
 
 const Diary = mongoose.model('Diary', DiarySchema);
 

@@ -2,9 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const uuidv4 = require('uuid/v4');
 
-const Schema = mongoose.Schema;
-
-const UserSchema = new Schema({
+const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -45,26 +43,26 @@ UserSchema.pre('save', function (next) {
 });
 
 UserSchema.statics.authenticate = function (username, password, callback) {
-  User.findOne({ username: username })
-    .exec(function (err, user) {
-      if (err) {
-        return callback(err)
-      } else if (!user) {
-        var err = new Error('Invalid User credentials.');
-        err.status = 401;
-        return callback(err);
+  const User = this;
+  User.findOne({ username })
+    .exec((err, user) => {
+      if (err) return callback(err);
+
+      if (!user) {
+        const error = new Error('Invalid User credentials.');
+        error.status = 401;
+        return callback(error);
       }
-      bcrypt.compare(password, user.password, function (err, result) {
+
+      bcrypt.compare(password, user.password, (error, result) => {
         if (result === true) {
           user.generateAuthToken();
           return callback(null, user);
-        } else {
-          var err = new Error('Invalid User credentials.');
-          return callback(err);
         }
-      })
+        return callback(new Error('Invalid User credentials.'));
+      });
     });
-}
+};
 
 UserSchema.methods.generateAuthToken = function () {
   const user = this;
@@ -83,23 +81,23 @@ UserSchema.methods.removeAuthToken = function () {
     token: '',
   });
 };
+
 UserSchema.statics.expireToken = function (token, callback) {
-  User.update(token, { token: '' }, function (err, user) {
-    if (err) {
-      return callback(err);
-    } else {
-      return callback(null, user);
-    }
+  const User = this;
+  User.update(token, { token: '' }, (err, user) => {
+    if (err) return callback(err);
+
+    return callback(null, user);
   });
-}
+};
+
 UserSchema.statics.findByToken = function (token, callback) {
   const User = this;
 
-  return User.findOne(token, { username: 1, fullname: 1, age: 1 }).exec(function (err, user) {
-    if (err)
-      return callback(new Error('Invalid token'));
-    else
-      return callback(null, user);
+  return User.findOne(token, { username: 1, fullname: 1, age: 1 }).exec((err, user) => {
+    if (err) return callback(new Error('Invalid token'));
+
+    return callback(null, user);
   });
 };
 

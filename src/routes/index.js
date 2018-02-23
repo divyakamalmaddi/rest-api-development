@@ -7,8 +7,9 @@ const router = express.Router();
 const endpointList = ['/', '/meta/heartbeat', '/meta/members'];
 const pathToFile = path.join(__dirname, '..', 'team_members.txt');
 
-var user_controller = require('../controllers/users');
-var diary_controller = require('../controllers/diaries');
+const userController = require('../controllers/users');
+const diaryController = require('../controllers/diaries');
+
 let teamMembers = [];
 
 fs.readFile(pathToFile, 'utf8', (error, data) => {
@@ -37,22 +38,16 @@ router.get('/meta/members', (req, res) => {
   });
 });
 
-router.post('/users/register', user_controller.registerUser);
+router.post('/users/register', userController.registerUser);
+router.post('/users/authenticate', userController.authenticateUser);
+router.post('/users/expire', userController.expireUserToken);
+router.post('/users', userController.getUserByToken);
 
-router.post('/users/authenticate', user_controller.authenticateUser);
+router.get('/diary', diaryController.getAllPublicDiaries);
 
-router.post('/users/expire', user_controller.expireUserToken);
-
-router.post('/users', user_controller.getUserByToken);
-
-router.get('/diary', diary_controller.getAllPublicDiaries);
-
-router.post('/diary', diary_controller.getEntriesByUsername);
-
-router.post('/diary/create', diary_controller.createDiaryEntry);
-
-router.post('/diary/delete', diary_controller.deleteEntry);
-
-router.post('/diary/permission', diary_controller.editPermission);
+router.post('/diary', diaryController.getEntriesByUsername);
+router.post('/diary/create', diaryController.createDiaryEntry);
+router.post('/diary/delete', diaryController.deleteEntry);
+router.post('/diary/permission', diaryController.editPermission);
 
 module.exports = router;
