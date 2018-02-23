@@ -83,20 +83,20 @@ UserSchema.methods.removeAuthToken = function () {
     token: '',
   });
 };
-UserSchema.statics.expireToken = function(token, callback) {
-  User.update(token, {token:''},function(err,user){
-    if(err) {
+UserSchema.statics.expireToken = function (token, callback) {
+  User.update(token, { token: '' }, function (err, user) {
+    if (err) {
       return callback(err);
-    }else {
-      return callback(null,user);
+    } else {
+      return callback(null, user);
     }
   });
 }
 UserSchema.statics.findByToken = function (token, callback) {
   const User = this;
 
-  return User.findOne(token,{username:1, fullname: 1, age:1}).exec(function (err, user) {
-    if(err)
+  return User.findOne(token, { username: 1, fullname: 1, age: 1 }).exec(function (err, user) {
+    if (err)
       return callback(new Error('Invalid token'));
     else
       return callback(null, user);
