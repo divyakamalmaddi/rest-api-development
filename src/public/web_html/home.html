@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Secret Diary</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+background-image: url(bg4.jpg);;
+}
+
+/* Style the header */
+.header {
+    background-color: #f1f1f1;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Style the top navigation bar */
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+}
+
+
+/* Create three equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 33.33%;
+    padding: 100px;
+	
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+	
+}
+
+/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+@media (max-width:600px) {
+    .column {
+        width: 100%;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Secret Diary</h1>
+  
+</div>
+
+
+
+<div class="row">
+  <div class="column">
+    <h2> View all Entries </h2>
+		<ul>
+			<li><h3>Entry 1</h3></li>
+			<br>
+			<li><h3>Entry 2</h3></li>
+			<br>
+			<li><h3>Entry 3</h3></li>
+			<br>
+		</ul>
+
+</div>
+
+  
+  <div class="column">
+    <section>
+	<section>
+	<button type="button">Save</button>
+	
+	<button type="button">Delete</button>
+		
+		<input type="radio" name="public" value="public" checked><font color="black" style=background-color:grey;><b>Public</b></font>
+<input type="radio" name="public" value="public"><font color="black" style=background-color:grey;><b> Private</b></font>
+	</section>
+		<section>
+			<div class="row">
+			<textarea  rows="5%" cols="100%" spellcheck="true" placeholder=" Title here.."></textarea>
+			</div>
+<div class="container">
+              
+			
+                            <textarea  rows="20%" cols="100%" spellcheck="true"placeholder="Please enter your text here.."></textarea>
+                                           
+             
+          </div>
+			</section>
+
+</section>
+  </div>
+</div>
+
+</body>
+</html>
